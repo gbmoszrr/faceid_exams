@@ -1492,6 +1492,10 @@ height:170px;
     padding: 0 5px 0 5px;
     }
 
+.tb-row-25:hover
+{
+    background-color: rgba(0,0,0,0.10);
+}
 
 .tb-row-gray-25 {
     display: flex;
@@ -1530,6 +1534,19 @@ width: 100%;
 height:30px;
 }
 
+.tb-row-options {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 400px;
+    height:30px;
+}
+
+.tb-row-options:hover {
+    background-color: rgba(0,0,0,0.10);
+}
+
+    
 .tb-row-gray {
 display: flex;
 flex-direction: row;
@@ -1641,7 +1658,7 @@ width: 90px;
 .tb-column-title{
  
 padding: 0 10px 0 10px;
-width: 300px;
+width: 450px;
 text-align: left;
 }
 

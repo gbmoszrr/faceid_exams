@@ -243,7 +243,7 @@ def get_exam(exam_id):
 
 #User routes---------------------------
 @app.route('/user/')
-@login_required
+#@login_required
 def user_home():
 
     if current_user.is_authenticated:
