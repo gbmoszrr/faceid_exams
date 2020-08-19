@@ -221,6 +221,24 @@ def list_users():
     return render_template('./admin/admin_list_users.html', users=users, error=error)
 
 
+@app.route('/admin/delenroll/<user_id>')
+def delete_enrolment(user_id):
+    error=None
+
+    try:
+        user_id = int(user_id)
+        #result = Enrolment.query.filter_by(id=user_id).delete()
+        enroll = Enrolment.query.filter(user_id==user_id).one()
+        db.session.delete(enroll)
+        db.session.commit()
+    except ValueError as verr:
+        error= 'Delete exception'
+ 
+    
+
+    return render_template('./admin/admin_home.html', error=error)
+
+
 @app.route('/admin/list/exams/')
 def list_exams():
     error=None
