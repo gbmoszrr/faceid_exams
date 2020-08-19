@@ -1,0 +1,97 @@
+{% extends "./admin/admin_base.html" %}
+    
+    
+    
+{% block content %}   
+    <!-- ***** Content Area Start ***** -->
+    <div id="content">
+        <!-- ***** Special Area Start ***** -->
+        <section class="special-area bg-white section_padding_150_50" id="about">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <!-- Section Heading Area -->
+                        <div class="section-heading text-center">
+                            <h2>List of exams</h2>
+                            
+                            <h3 id="message">
+                            {% if message %}
+                            <p class="message"><strong> {{ message }} </strong> 
+                            {% endif %}
+                            </h3>
+                            <div class="line-shape"></div>
+                        </div>
+                    </div>
+                </div>
+    
+                 
+            </div>
+            <!-- Special Description Area -->
+            <div class="special_description_area">
+                <div class="container">
+                    <div class="row">
+    
+                        <div class="col-lg-12">
+                            <div class="special_description_content text-center">
+ 
+                            </div>
+                            <div class="webcam-frame">
+
+    
+                                    {% if error %}
+                                      <a class="error"><strong>Error:</strong> {{ error }}
+                                    {% endif %}
+
+                                  
+                                       
+
+
+                                        <div class='table-wrapper-exams'>                                                               
+                                            {% for exam in exams %}                                        
+                                            <div class='tb-row-exams'>
+                                                <div class='tb-column-examid'>ID: {{ exam.id }}</div>
+                                                <div class='tb-column-title'><a href='/admin/list/exam/{{exam.id}}'>{{ exam.title }}</a></div>
+                                            </div>              
+                                            {% endfor %}
+                                             
+                                          </div>
+
+       
+                                        
+                                    
+                            </div> 
+                            
+                            <div class="down-menu">
+                                <!-- <div class="app-download-btn wow fadeInUp button-200" data-wow-delay="0.2s">
+                                    
+                                    <a href="/admin/add/exam/">
+                                        <i class="fa fa-sign-in-alt"></i>
+                                        <p class="mb-0">Add new exam</p>
+                                    </a>
+                                </div>  -->
+
+
+                                <div class="app-download-btn wow fadeInUp button-200" data-wow-delay="0.2s">
+                                    
+                                    <a href="/admin/list/users/">
+                                        <i class="fa fa-sign-in-alt"></i>
+                                        <p class="mb-0">List all users</p>
+                                    </a>
+                                </div>  
+                            </div>  
+
+                        </div>
+     
+                         
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- ***** Special Area End ***** -->
+     
+     
+    
+        </div>
+        <!-- ***** content Area End ***** -->
+
+        {% endblock %}

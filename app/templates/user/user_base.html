@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+ 
+    {% if title %}
+    <title>{{ title }}</title>
+    {% else %}
+    <title>User area</title>
+    {% endif %}
+    <meta charset="UTF-8">
+    <meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+    <!-- Core Stylesheet -->
+    <link href="/static/style.css" rel="stylesheet">
+
+    <!-- Responsive CSS -->
+    <link href="/static/css/responsive.css" rel="stylesheet">
+
+</head>
+
+<body>
+    <!-- Preloader Start -->
+    <div id="preloader">
+        <div class="colorlib-load"></div>
+    </div>
+
+    <!-- ***** Header Area Start ***** -->
+    <header class="header_area">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <!-- Menu Area Start -->
+                <div class="col-12 col-lg-10">
+                    <div class="menu_area">
+                        <nav class="navbar navbar-expand-lg navbar-light">
+                            <!-- Logo -->
+                            <a class="navbar-brand" href="/admin/">FaceID User Area</a>
+                            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ca-navbar" aria-controls="ca-navbar" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                            <!-- Menu Area -->
+                            <div class="collapse navbar-collapse" id="ca-navbar">
+                                <ul class="navbar-nav ml-auto" id="nav">
+                                    <li class="nav-item"><a class="nav-link" href="/user/">Home</a></li>
+ 
+                                    <li class="nav-item"><a class="nav-link" href="/user/logout/">Logout</a></li>
+                                </ul>
+                          
+                            </div>
+                        </nav>
+                    </div>
+                </div>
+   
+            </div>
+        </div>
+    </header>
+    <!-- ***** Header Area End ***** -->
+ 
+
+
+
+
+    {% block content %}{% endblock %}
+
+
+
+
+
+    <!-- ***** Footer Area Start ***** -->
+    <footer class="footer-social-icon text-center section_padding_70 clearfix">
+        <!-- footer logo -->
+        <div class="footer-text">
+            <h3>FaceID User area</h3>
+        </div>
+ 
+        <div class="footer-menu">
+            <nav>
+                <ul>
+                    <li><a href="#">About</a></li>
+
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+        <!-- Foooter Text-->
+        <div class="copyright-text">
+            <!-- ***** Removing this text is now allowed! This template is licensed under CC BY 3.0 ***** -->
+            <p>Copyright ©2020 FaceID</p>
+        </div>
+    </footer>
+    <!-- ***** Footer Area Start ***** -->
+
+    <!-- Jquery-2.2.4 JS -->
+    <script src="/static/js/jquery-2.2.4.min.js"></script>
+    <!-- Popper js -->
+    <script src="/static/js/popper.min.js"></script>
+    <!-- Bootstrap-4 Beta JS -->
+    <script src="/static/js/bootstrap.min.js"></script>
+    <!-- All Plugins JS -->
+    <script src="/static/js/plugins.js"></script>
+    <!-- Slick Slider Js-->
+    <script src="/static/js/slick.min.js"></script>
+    <!-- Footer Reveal JS -->
+    <script src="/static/js/footer-reveal.min.js"></script>
+    <!-- Active JS -->
+    <script src="/static/js/active.js"></script>
+</body>
+
+</html>

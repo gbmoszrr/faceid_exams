@@ -1,0 +1,104 @@
+{% extends "./admin/admin_base.html" %}
+    
+    
+    
+{% block content %}   
+    <!-- ***** Content Area Start ***** -->
+    <div id="content">
+        <!-- ***** Special Area Start ***** -->
+        <section class="special-area bg-white section_padding_150_50" id="about">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <!-- Section Heading Area -->
+                        <div class="section-heading text-center">
+                            <h2>Admin area</h2>
+                            
+                            <h3 id="errormessage"></h3>
+                            <div class="line-shape"></div>
+                        </div>
+                    </div>
+                </div>
+    
+                 
+            </div>
+            <!-- Special Description Area -->
+            <div class="special_description_area">
+                <div class="container">
+                    <div class="row">
+    
+                        <div class="col-lg-6">
+                            <div class="special_description_content text-center">
+                                <h2>Users</h2>
+                            </div>
+                            <div class="webcam-frame">
+     
+                                <div class="text-center ">
+                                    <div class="app-download-btn wow fadeInUp button-200" data-wow-delay="0.2s">
+                                        
+                                        <a href="/admin/add/user/">
+                                            
+                                            <p class="mb-0">Add new user</p>
+                                        </a>
+                                    </div>
+     
+     
+                                    <div class="app-download-btn wow fadeInUp button-200" data-wow-delay="0.2s">
+                                        
+                                        <a href="/admin/list/users/">
+                                            
+                                            <p class="mb-0">Lis all users</p>
+                                        </a>
+                                    </div>
+     
+                                </div>               
+                                
+                                
+                            
+                                 
+    
+                            </div>
+    
+                     
+                        </div>
+    
+                        <div class="col-lg-6">
+                            <div class="special_description_content text-center">
+                                <h2>Exams</h2>
+                            </div>
+
+
+                            <div class="webcam-frame">
+                                 
+                                
+                                    <div class="text-center ">
+                                    
+ 
+        
+                                        <div class="app-download-btn wow fadeInUp button-200" data-wow-delay="0.2s">
+                                            
+                                            <a href="/admin/list/exams/">
+                                                <i class="fa fa-sign-in-alt"></i>
+                                                <p class="mb-0">List all exams</p>
+                                            </a>
+                                        </div>
+        
+                                    </div> 
+
+
+
+                            </div>
+                            
+                        </div>
+                         
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- ***** Special Area End ***** -->
+     
+    
+        </div>
+        <!-- ***** content Area End ***** -->
+
+        {% endblock %}

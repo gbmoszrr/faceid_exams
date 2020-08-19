@@ -1,0 +1,51 @@
+{% extends "./user/user_base.html" %}
+ 
+
+{% block content %}
+    <!-- ***** Content Area Start ***** -->
+    <div id="content">
+        <!-- ***** Special Area Start ***** -->
+        <section class="special-area bg-white section_padding_150_50" id="about">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <!-- Section Heading Area -->
+                        <div class="section-heading text-center">
+                            <h2>{{ message }}</h2>
+                            
+                            <h3 id="message">
+                            {% if error %}
+                            <p class="error"><strong> {{ error }} </strong> 
+                            {% endif %}
+                            </h3>
+                            <div class="line-shape"></div>
+
+
+                            <div class="down-menu">
+ 
+
+                                <div class="app-download-btn wow fadeInUp button-200" data-wow-delay="0.2s">
+                                    
+                                    <a href="/user/">
+                                      
+                                        <p class="mb-0">Home</p>
+                                    </a>
+                                </div>  
+                            </div> 
+
+
+                        </div>
+                    </div>
+                </div>
+ 
+ 
+
+    
+    </section>
+    <!-- ***** Special Area End ***** -->
+ 
+    </div>
+    <!-- ***** content Area End ***** -->
+
+
+    {% endblock %}

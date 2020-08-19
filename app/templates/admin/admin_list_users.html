@@ -1,0 +1,113 @@
+{% extends "./admin/admin_base.html" %}
+    
+    
+    
+{% block content %}   
+    <!-- ***** Content Area Start ***** -->
+    <div id="content">
+        <!-- ***** Special Area Start ***** -->
+        <section class="special-area bg-white section_padding_150_50" id="about">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <!-- Section Heading Area -->
+                        <div class="section-heading text-center">
+                            <h2>FaceID Users</h2>
+                            
+                            <h3 id="message">
+                            {% if message %}
+                            <p class="message"><strong> {{ message }} </strong> 
+                            {% endif %}
+                            </h3>
+                            <div class="line-shape"></div>
+                        </div>
+                    </div>
+                </div>
+    
+                 
+            </div>
+            <!-- Special Description Area -->
+            <div class="special_description_area">
+                <div class="container">
+                    <div class="row">
+    
+                        <div class="col-lg-12">
+                            <div class="special_description_content text-center">
+ 
+                            </div>
+                            <div class="webcam-frame">
+
+    
+                                    {% if error %}
+                                      <p class="error"><strong>Error:</strong> {{ error }}
+                                    {% endif %}
+
+                                  
+                                       
+
+
+                                        <div class='table-wrapper'>
+                                             
+                                             
+                                            {% for row in users|batch(5, '&nbsp;') %}
+                                             
+                                            <div class='tb-row'>
+     
+                                                {% for user in row %}
+                                                    {% if user != '&nbsp;' %}
+                                                    <div class='tb-column'>
+                                                            <div class='tb-line'>ID: {{ user.id }}</div>
+                                                            <div class='tb-image'><img width="100px" src="/static/photos/{{ user.photo }}"></div>
+                                                            <div class='tb-line'>{{ user.name }}</div>
+                                                            <div class='tb-line'>{{ user.email }}</div>
+                                                        
+                                                    </div>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+    
+                                             
+                                            
+                                            {% endfor %}
+                                             
+                                          </div>
+
+       
+                                        
+                                    
+                            </div> 
+                            
+                            <div class="down-menu">
+                                <div class="app-download-btn wow fadeInUp button-200" data-wow-delay="0.2s">
+                                    
+                                    <a href="/admin/add/user/">
+                                        <i class="fa fa-sign-in-alt"></i>
+                                        <p class="mb-0">Add new user</p>
+                                    </a>
+                                </div> 
+
+
+                                <div class="app-download-btn wow fadeInUp button-200" data-wow-delay="0.2s">
+                                    
+                                    <a href="/admin/list/exams/">
+                                        <i class="fa fa-sign-in-alt"></i>
+                                        <p class="mb-0">List all exams</p>
+                                    </a>
+                                </div>  
+                            </div>  
+
+                        </div>
+     
+                         
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- ***** Special Area End ***** -->
+     
+     
+    
+        </div>
+        <!-- ***** content Area End ***** -->
+
+        {% endblock %}

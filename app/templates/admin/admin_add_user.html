@@ -1,0 +1,71 @@
+{% extends "./admin/admin_base.html" %}
+    
+    
+    
+{% block content %}   
+    <!-- ***** Content Area Start ***** -->
+    <div id="content">
+        <!-- ***** Special Area Start ***** -->
+        <section class="special-area bg-white section_padding_150_50" id="about">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <!-- Section Heading Area -->
+                        <div class="section-heading text-center">
+                            <h2>Add new user</h2>
+                            
+                            <h3 id="errormessage"></h3>
+                            <div class="line-shape"></div>
+                        </div>
+                    </div>
+                </div>
+    
+                 
+            </div>
+            <!-- Special Description Area -->
+            <div class="special_description_area">
+                <div class="container">
+                    <div class="row">
+    
+                        <div class="col-lg-12 " >
+
+                            <div class="col-lg-6 size-480 webcam-frame">
+
+ 
+                                 
+                                    <form name="userform" method="post"  action="/admin/add/user/" class="loginform" enctype="multipart/form-data">
+                                        <div class="text-center">
+                                            {% if error %}
+                                            <p style="color: red;"><strong>Error: {{ error }} </strong> 
+                                            {% endif %}
+                                        </div>
+                                        <div class="text-center">Enter user details</div>
+                                        <input class="form-input" type="text" style="margin:10px 0 10px 0; width:240px;" placeholder="Name" name="name" value="{{request.form.name }}" required>
+                                        <input class="form-input" type="text" style="margin:10px 0 10px 0; width:240px;" placeholder="Email" name="email" value="{{request.form.email }}">
+
+                                        <div class="text-center"><br>Please choose at least 5 images</div>
+                                        <input type="file" name="file[]" multiple="" autocomplete="off" required>
+                                        <input class='submit-button' type="submit" value="Submit">
+                                        <div class="buttonwrapper200">
+                                         
+                                        </div>
+                                
+                                    </form>
+
+                            <div>                     
+                        </div>
+    
+  
+                         
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- ***** Special Area End ***** -->
+     
+     
+    
+        </div>
+        <!-- ***** content Area End ***** -->
+
+        {% endblock %}

@@ -1,0 +1,103 @@
+{% extends "./admin/admin_base.html" %}
+    
+    
+    
+{% block content %}   
+    <!-- ***** Content Area Start ***** -->
+    <div id="content">
+        <!-- ***** Special Area Start ***** -->
+        <section class="special-area bg-white section_padding_150_50" id="about">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <!-- Section Heading Area -->
+                        <div class="section-heading text-center">
+                            <h2>{{ exam.title }}</h2>
+                            
+                            <h3 id="message">
+                            {% if message %}
+                            <p class="message"><strong> {{ message }} </strong> 
+                            {% endif %}
+                            </h3>
+                            <div class="line-shape"></div>
+                        </div>
+                    </div>
+                </div>
+    
+                 
+            </div>
+            <!-- Special Description Area -->
+            <div class="special_description_area">
+                <div class="container">
+                    <div class="row">
+    
+                        <div class="col-lg-12">
+                            <div class="special_description_content text-center">
+ 
+                            </div>
+                            <div class="webcam-frame">
+
+    
+                                    {% if error %}
+                                      <a class="error"><strong>Error:</strong> {{ error }}
+                                    {% endif %}
+
+                                
+                                        <div class='table-wrapper'>                     
+                                            
+                                            {% for question in questions %}                                        
+                                            <div class='tb-row-question'>
+                                                
+                                                <div class='tb-column-exam-question'><strong>{{loop.index}}. {{ question.title }}</strong></div>
+                                            </div> 
+                                        
+                                            <div class='tb-row-exam-option'> 
+                                                <div class='tb-row-title'><div class='tb-line'>{{ question.option1 }}</div></div>
+                                            </div>
+                                            <div class='tb-row-exam'> 
+                                                <div class='tb-row-title'><div class='tb-line'>{{ question.option2 }}</div></div>
+                                            </div>
+                                             
+                                            {% endfor %}
+                                             
+                                          </div>
+
+       
+                                        
+                                    
+                            </div> 
+                            
+                            <div class="down-menu">
+                                <!-- <div class="app-download-btn wow fadeInUp button-200" data-wow-delay="0.2s">
+                                    
+                                    <a href="/admin/add/exam/">
+                                        <i class="fa fa-sign-in-alt"></i>
+                                        <p class="mb-0">Add new exam</p>
+                                    </a>
+                                </div>  -->
+
+
+                                <div class="app-download-btn wow fadeInUp button-200" data-wow-delay="0.2s">
+                                    
+                                    <a href="/admin/list/exams/">
+                                        <i class="fa fa-sign-in-alt"></i>
+                                        <p class="mb-0">List all exams</p>
+                                    </a>
+                                </div>  
+                            </div>  
+
+                        </div>
+     
+                         
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- ***** Special Area End ***** -->
+     
+     
+    
+        </div>
+        <!-- ***** content Area End ***** -->
+
+        {% endblock %}

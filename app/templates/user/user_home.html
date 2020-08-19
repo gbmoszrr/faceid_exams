@@ -1,0 +1,114 @@
+{% extends "./user/user_base.html" %}
+ 
+
+{% block content %}
+    <!-- ***** Content Area Start ***** -->
+    <div id="content">
+    <!-- ***** Special Area Start ***** -->
+    <section class="special-area bg-white section_padding_150_50" id="about">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <!-- Section Heading Area -->
+                        <div class="section-heading text-center">
+                            <h2>User Homepage</h2>
+        
+                            <div class="line-shape"></div>
+                        </div>
+
+                        <div class="special_description_content text-center">
+                            <h2>You are logged as {{user_name}}</h2>
+                            <div>
+                                <p>FaceID confidence is {{confidence}}</p>
+                            </div>
+                        </div>
+
+                        <div class="special_description_content text-center">
+                            <div class="webcam-frame">
+
+    
+                                {% if error %}
+                                  <a class="error"><strong>Error:</strong> {{ error }}
+                                {% endif %}
+                            <div class="table-container">
+                                <div class='table-wrapper-exams'>
+                                
+
+                                <!-- List of available exams -->
+
+                                    <div class="tb-title text-center">List of available exams</div>
+                                    <div class='tb-row-gray-25'>
+                                        <div class='tb-column-examid'>Exam ID</div>
+                                        <div class='tb-column-title'>Exam title</div>
+                                        <div class='tb-column-150'>Action</div>
+ 
+                                    </div> 
+                                                            
+                                    {% for row in available_exams %}                                        
+                                    <div class='tb-row-25'>
+                                        <div class='tb-column-examid'>ID: {{ row.id }}</div>
+                                        <div class='tb-column-title'>{{ row.title }}</div>
+                                        <div class='tb-column-150'>ACTION (<a href='/user/{{ user_id }}/enroll/{{row.id}}'>enroll</a>)</div>
+                                        
+                                    </div>              
+                                    {% endfor %}
+                                     
+                                </div>
+
+                                <!-- List of passed exams -->
+
+
+                                <div class='table-wrapper-exams'>
+ 
+                                    <div class="tb-title text-center">List of passed exams</div>
+
+                                    <div class='tb-row-gray-25'>
+                                        <div class='tb-column-examid'>Exam ID</div>
+                                        <div class='tb-column-title'>Exam title</div>
+                                        <div class='tb-column-150'>Exam date</div>
+                                        <div class='tb-column-150'>Exam status</div>
+                                    </div> 
+                                                            
+                                    {% for row in enrolment %}                                        
+                                    <div class='tb-row-25'>
+                                        <div class='tb-column-examid'>ID: {{ row.Enrolment.exam_id }}</div>
+                                        <div class='tb-column-title'><a href='/user/{{user_id}}/list/{{row.Exams.id}}'>{{ row.Exams.title }}</a></div>
+                                        <div class='tb-column-150'>{{ row.Enrolment.date.strftime('%Y-%m-%d') }}</div>
+                                        <div class='tb-column-150'>{{ row.Enrolment.status }}</div>
+                                    </div>              
+                                    {% endfor %}
+                                     
+                                </div>
+
+   
+                            <div>       
+                                
+                        </div> 
+                        
+                        </div>
+                </div>
+            </div>
+
+             
+        </div>
+        <!-- Special Description Area -->
+        <div class="special_description_area">
+            <div class="container">
+                <div class="row">
+
+                    
+
+
+
+                    
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- ***** Special Area End ***** -->
+ 
+    </div>
+    <!-- ***** content Area End ***** -->
+
+
+    {% endblock %}

@@ -1,0 +1,148 @@
+{% extends "./user/user_base.html" %}
+    
+    
+    
+{% block content %}   
+    <!-- ***** Content Area Start ***** -->
+    <div id="content">
+        <!-- ***** Special Area Start ***** -->
+        <section class="special-area bg-white section_padding_150_50" id="about">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <!-- Section Heading Area -->
+                        <div class="section-heading text-center">
+                            <h2>{{ exam.title }}</h2>
+                            
+                            <h3 id="message">
+                            {% if message %}
+                            <p class="message"><strong> {{ message }} </strong> 
+                            {% endif %}
+                            </h3>
+                            <div class="line-shape"></div>
+                        </div>
+                    </div>
+                </div>
+    
+                 
+            </div>
+            <!-- Special Description Area -->
+            <div class="special_description_area">
+                <div class="container">
+                    <div class="row">
+    
+                        <div class="col-lg-12">
+                            <div class="special_description_content text-center">
+ 
+                            </div>
+                            <div class="webcam-frame">
+
+    
+                                    {% if error %}
+                                      <a class="error"><strong>Error:</strong> {{ error }}
+                                    {% endif %}
+
+                                
+                                        <div class='table-wrapper'>                     
+                                            <form action='/user/{{ user_id }}/enroll/{{ exam_id }}' method='POST' id='exam'>
+                                            {% for question in questions %}                                        
+                                            <div class='tb-row-question'>
+                                                
+                                                <div class='tb-column-exam-question'><strong>{{loop.index}}. {{ question.title }}</strong></div>
+                                            </div> 
+                                        
+                                                    <div class='tb-row-exam-option'> 
+                                                        <div class='tb-row-title'>
+                                                            
+                                                                <div class='tb-radiobutton'><input type='radio' value='1' name='{{question.id}}' checked/></div>
+                                                                <div class='tb-option'>{{ question.option1 }}</div>
+                                                            
+                                                        </div>
+                                                    </div>
+                                                    <div class='tb-row-exam'> 
+                                                        <div class='tb-row-title'>
+                                                            <div class='tb-radiobutton'><input type='radio' value='2' name='{{question.id}}'/></div>
+                                                            <div class='tb-option'>{{ question.option2 }}</div>
+                                                        </div>
+                                                    </div>
+
+                                                    {% if question.option3 %}
+                                                    <div class='tb-row-exam'> 
+                                                        <div class='tb-row-title'>
+                                                            <div class='tb-radiobutton'><input type='radio' value='3' name='{{question.id}}'/></div>
+                                                            <div class='tb-option'>{{ question.option3 }}</div>
+                                                        </div>
+                                                    </div>
+                                                    {% endif %}
+
+                                                    {% if question.option4 %}
+                                                    <div class='tb-row-exam'> 
+                                                        <div class='tb-row-title'>
+                                                            <div class='tb-radiobutton'><input type='radio' value='4' name='{{question.id}}'/></div>
+                                                            <div class='tb-option'>{{ question.option4 }}</div>
+                                                        </div>
+                                                    </div>
+                                                    {% endif %}
+                                                    
+
+                                                    {% if question.option5 %}
+                                                    <div class='tb-row-exam'> 
+                                                        <div class='tb-row-title'>
+                                                            <div class='tb-radiobutton'><input type='radio' value='5' name='{{question.id}}'/></div>
+                                                            <div class='tb-option'>{{ question.option5 }}</div>
+                                                        </div>
+                                                    </div>
+                                                    {% endif %}
+                                             
+
+                                             
+                                            {% endfor %}
+                                            </form>  
+                                          </div>
+                                        
+                                        
+                                        </div> 
+
+
+       
+                                          <div class="down-menu">
+
+            
+            
+                                            <div class="app-download-btn wow fadeInUp button-200" data-wow-delay="0.2s">
+                                                
+                                                <a href="javascript:document.getElementById('exam').submit();">
+                                               
+                                                    <p class="mb-0">Submit</p>
+                                                </a>
+                                            </div>  
+
+
+                                            <div class="app-download-btn wow fadeInUp button-200" data-wow-delay="0.2s">
+                                                
+                                                <a href="/user/">
+                                                    
+                                                    <p class="mb-0">Back</p>
+                                                </a>
+                                            </div> 
+                                        </div>  
+                                    
+
+                            
+
+
+                        </div>
+     
+                         
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- ***** Special Area End ***** -->
+     
+     
+    
+        </div>
+        <!-- ***** content Area End ***** -->
+
+        {% endblock %}
