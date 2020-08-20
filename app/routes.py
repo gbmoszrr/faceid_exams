@@ -191,11 +191,11 @@ def add_user():
             message = 'New user '+ request.form['name'] + ' has been added'
             #return redirect(url_for('/admin/list/users/',message=message))
 
-            #add photo filesystem
-            for photo_file in photo_files_web:
-                new_photo = Photos(user_id = new_user.id, filename=photo_file)
-                db.session.add(new_photo)
-                db.session.commit()
+            #add photo 
+            # for photo_file in photo_files_web:
+            #     new_photo = Photos(user_id = new_user.id, filename=photo_file)
+            #     db.session.add(new_photo)
+            #     db.session.commit()
 
             #Train faceID
             for photo_file in photo_files_os:
@@ -416,15 +416,122 @@ def logout():
     logout_user()
     return redirect('/')
 
+@app.route('/terms/')
+def terms():
+ 
+    return render_template('./terms.html') 
+
+
+	
+@app.route('/signup/', methods=['GET', 'POST'])
+def user_signup():
+    error = None
+    message = ''
+    template = './user_signup.html'
+ 
+
+    if request.method == 'POST':
+
+        uploaded_files = request.files.getlist("file[]")
+        print( uploaded_files)
+
+        photo_files_os = []
+        photo_files_web = []
+
+        if 'file[]' not in request.files:
+            error = 'No file part'
+            return render_template(template, error=error)
+
+         
+        if len(uploaded_files) < 5:
+            error = 'Please select at least 5 images'
+            return render_template(template, error=error)
+
+        for file in uploaded_files:
+
+            if file.filename == '':
+                error= 'No image selected for uploading'
+                return render_template(template, error=error)
+
+            if file and allowed_file(file.filename):
+                filename = str(uuid.uuid4()) + '.jpg' #secure_filename(file.filename)
+                photo_files_web.append(filename)
+
+                filename = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                photo_files_os.append(filename)
+
+                image = Image.open(file)
+                image.thumbnail((500,500))
+ 
+                image.save(filename)
+                #file.save(filename)
+                print('upload_image filename: ' + filename)
+                message = 'Image successfully uploaded and displayed'
+                #return render_template('upload.html', filename=filename, message=message)
+            else:
+                error = 'Allowed image types are -> png, jpg, jpeg, gif'
+                #return redirect(request.url, error=error)
+                return render_template(template, error=error)
+
+        
+
+        if request.form['email'] != '' or len(request.form['email'])!=0:
+
+            name = request.form['name']
+            email = request.form['email']
+
+            
+
+
+            #Save thumbnail
+            image = Image.open(photo_files_os[0])
+            image.thumbnail((100,100))
+            #rgb_im = image.convert('RGB')
+            thumb_filename = str(uuid.uuid4()) + '.jpg'
+            image.save(os.path.join(app.config['THUMB_FOLDER'], thumb_filename))
+
+
+            user = User.query.filter_by(email=email).first()
+            
+            if user:
+                new_user_id = user.id
+                message = 'New user '+ request.form['name'] + ' has been updated'
+            else:            
+
+                new_user = User(name=name, email=email, photo=thumb_filename)
+                db.session.add(new_user)
+                db.session.commit()
+                new_user_id = new_user.id
+            
+                message = 'New user '+ request.form['name'] + ' has been added'
+
+ 
+            
+            #Train faceID
+            for photo_file in photo_files_os:
+                response = execute_train(new_user_id, photo_file)
+                if 'error' in response:
+                    error = 'FaceID ' + response['error']
+                    return render_template(template, error=error)
+
+
+            if new_user.id > 2:
+                error = rebuild_album()
+                if error is not None:
+                    return render_template(template, error=error)
+
+             
+            return render_template('./sigup_result.html', message=message, error=error)
+
+            #error = 'Invalid Credentials. Please try again.'
+ 
+
+    return render_template('./user_signup.html', error=error)
+
 
 
 def send_email(user_id, exam_id):
-
-
-
-    #Get data
-
-     
+    
     error=None
 
     try:
