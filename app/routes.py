@@ -17,6 +17,9 @@ import os
 import uuid
 import config
 
+import boto3
+from botocore.exceptions import ClientError
+
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
 def allowed_file(filename):
@@ -122,6 +125,7 @@ def admin_home():
 def add_user():
     error = None
     template = './admin/admin_add_user.html'
+ 
 
     if request.method == 'POST':
 
@@ -155,7 +159,8 @@ def add_user():
 
                 image = Image.open(file)
                 image.thumbnail((500,500))
-                image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename ))
+ 
+                image.save(filename)
                 #file.save(filename)
                 print('upload_image filename: ' + filename)
                 message = 'Image successfully uploaded and displayed'
@@ -322,6 +327,8 @@ def enrol_exam(user_id, exam_id):
             db.session.add(new_enrollment)
             db.session.commit()
 
+            send_email(user_id, exam_id)
+
         except Exception as e:
             error += ' ' + str(e.args[0])
              
@@ -408,3 +415,137 @@ def list_exam(user_id, exam_id):
 def logout():
     logout_user()
     return redirect('/')
+
+
+
+def send_email(user_id, exam_id):
+
+
+
+    #Get data
+
+     
+    error=None
+
+    try:
+
+        user = User.query.filter_by(id=user_id).first()
+
+            
+        sq = db.session.query(Question.id).filter(Question.exam_id == exam_id).subquery()
+        answers =  db.session.query(Answers).filter(Answers.question_id.in_(sq)).filter(Answers.user_id == user_id).order_by(Answers.question_id).all()
+
+        questions = Question.query.filter_by(exam_id=exam_id).order_by(Question.id).all()
+
+        exam = Exams.query.filter_by(id=exam_id).first()
+
+        list_of_questions = []
+        answer_str = 'Not defined'
+
+        for answer in answers:
+
+            for question in questions:
+                if question.id == answer.question_id:
+
+                    title = question.title
+                    if answer.answer == 1:
+                        answer_str = question.option1
+                    if answer.answer == 2:
+                        answer_str = question.option2
+                    if answer.answer == 3:
+                        answer_str = question.option3
+                    if answer.answer == 4:
+                        answer_str = question.option4
+                    if answer.answer == 5:
+                        answer_str = question.option5
+
+
+            tmp = { 'title': title, 
+                    'answer_str': answer_str
+                    }
+
+            list_of_questions.append(tmp)
+
+            
+
+    except Exception as e:
+        error = str(e.args[0])
+
+
+    #add to /.aws/credentials
+    Access_key_ID = 'AKIA2OAGHLAMRQEHLPHQ'
+    Secret_access_key = 'IJJS78CFkZA1mQlfAI8YjMRcPmbehgbXa8GpxhoE'
+
+
+    # Replace sender@example.com with your "From" address.
+    # This address must be verified with Amazon SES.
+    SENDER = "FaceID <openaiworld@gmail.com>"
+
+    # Replace recipient@example.com with a "To" address. If your account 
+    # is still in the sandbox, this address must be verified.
+    #RECIPIENT = "sas.aitech@gmail.com"
+    RECIPIENT = "gbmoszr1@gmail.com"
+
+    # Specify a configuration set. If you do not want to use a configuration
+    # set, comment the following variable, and the 
+    # ConfigurationSetName=CONFIGURATION_SET argument below.
+    #CONFIGURATION_SET = "ConfigSet"
+
+    # If necessary, replace us-west-2 with the AWS Region you're using for Amazon SES.
+    AWS_REGION = "us-east-2"
+
+
+
+    # The subject line for the email.
+    SUBJECT = "New exam submission from " + user.name
+
+    # The email body for recipients with non-HTML email clients.
+    BODY_TEXT = ''
+    counter = 1
+    for question in list_of_questions:
+
+        BODY_TEXT += str(counter) + '. ' + question['title'] + '\r\n'
+        BODY_TEXT += question['answer_str'] + '\r\n\r\n'
+
+        counter += 1
+                
+ 
+    # The character encoding for the email.
+    CHARSET = "UTF-8"
+
+    # Create a new SES resource and specify a region.
+    client = boto3.client('ses',region_name=AWS_REGION)
+
+    # Try to send the email.
+    try:
+        #Provide the contents of the email.
+        response = client.send_email(
+            Destination={
+                'ToAddresses': [
+                    RECIPIENT,
+                ],
+            },
+            Message={
+                'Body': {
+ 
+                    'Text': {
+                        'Charset': CHARSET,
+                        'Data': BODY_TEXT,
+                    },
+                },
+                'Subject': {
+                    'Charset': CHARSET,
+                    'Data': SUBJECT,
+                },
+            },
+            Source=SENDER,
+            # If you are not using a configuration set, comment or delete the
+            # following line
+            #ConfigurationSetName=CONFIGURATION_SET,
+        )
+    # Display an error if something goes wrong.	
+    except ClientError as e:
+        print(e.response['Error']['Message'])
+    else:
+        print("Email sent! Message ID:"),
+        print(response['MessageId'])
