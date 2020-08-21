@@ -6,6 +6,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField
 from app.api_logic import execute_request, execute_train, rebuild_album, check_confidence
 import json
+from cryptography.fernet import Fernet
 
 from PIL import Image
  
@@ -21,6 +22,9 @@ import boto3
 from botocore.exceptions import ClientError
 
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
+
+f = Fernet(app.config['KEY'])
+
 
 def allowed_file(filename):
 	return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -183,7 +187,12 @@ def add_user():
             image.save(os.path.join(app.config['THUMB_FOLDER'], thumb_filename))
 
             name = request.form['name']
+            name = f.encrypt(name.encode())
+
             email = request.form['email']
+            email = f.encrypt(email.encode())
+
+            
 
             new_user = User(name=name, email=email, photo=thumb_filename)
             db.session.add(new_user)
@@ -214,8 +223,7 @@ def add_user():
             return render_template('./admin/admin_list_users.html', users=users, message=message, error=error)
 
             #error = 'Invalid Credentials. Please try again.'
- 
-
+  
     return render_template('./admin/admin_add_user.html', error=error)
 
 @app.route('/admin/list/users/')
@@ -223,21 +231,75 @@ def list_users():
     error=None
     users = User.query.all()
 
+    # Decrypt names
+    for user in users:
+
+        username =  user.name
+        user.name  = f.decrypt(username.encode('utf-8')).decode('utf-8')
+
+        email = user.email
+        user.email = f.decrypt(email.encode('utf-8')).decode('utf-8')
+
+ 
+
     return render_template('./admin/admin_list_users.html', users=users, error=error)
 
 
-@app.route('/admin/delenroll/<user_id>')
-def delete_enrolment(user_id):
+
+
+
+@app.route('/admin/enrolment/user/<user_id>')
+#@login_required
+def user_enrolment(user_id):
+
+  
+
+    title = 'User enrolment'
+    error=None
+ 
+
+    sq = db.session.query(Enrolment.exam_id).filter(Enrolment.user_id == user_id).subquery()
+    available_exams =  db.session.query(Exams).filter(Exams.id.notin_(sq)).all()
+
+    enrolment = db.session.query(Enrolment, Exams).outerjoin(Exams, Enrolment.exam_id == Exams.id).filter(Enrolment.user_id == user_id).order_by(Enrolment.date.desc()).all()
+ 
+ 
+
+    return render_template('./admin/admin_user_enroll.html', error=error, user_id=user_id,  enrolment=enrolment, available_exams=available_exams, title=title)
+
+
+
+
+@app.route('/admin/delete/<user_id>/exam/<exam_id>')
+def delete_enrolment(user_id,exam_id):
     error=None
 
     try:
         user_id = int(user_id)
-        #result = Enrolment.query.filter_by(id=user_id).delete()
-        enroll = Enrolment.query.filter(user_id==user_id).one()
-        db.session.delete(enroll)
-        db.session.commit()
+        exam_id = int(exam_id)
     except ValueError as verr:
         error= 'Delete exception'
+        
+    questions = Question.query.filter_by(exam_id=exam_id).order_by(Question.id).all()
+
+     
+    for question in questions:
+
+        question_id = question.id
+         
+        try:
+            answer = Answers.query.filter(Answers.user_id==user_id).filter(Answers.question_id==question_id).one() #, Question.id==question_id
+            db.session.delete(answer)
+            db.session.commit()
+        except ValueError as verr:
+            error= 'Delete exception: answer not found'
+
+
+
+    enroll = Enrolment.query.filter(Enrolment.user_id==user_id).filter(Enrolment.exam_id==exam_id).one()
+    db.session.delete(enroll)
+    db.session.commit()
+
  
     
 
@@ -260,6 +322,16 @@ def get_exam(exam_id):
     return render_template('./admin/admin_list_exam_by_id.html', exam=exam, questions=questions, error=error)
 
 
+@app.route('/admin/key')
+def get_key():
+    error='Key written to /cr/dbencr.key'
+
+ 
+    # key = Fernet.generate_key()
+    # with open("./cr/dbencr.key", "wb") as key_file:
+    #     key_file.write(key)
+ 
+    return render_template('./admin/admin_home.html', error=error)
 
 # End Admin Routes-------------------------------
 
@@ -272,7 +344,7 @@ def user_home():
     if current_user.is_authenticated:
         pass
  
-    user_name = current_user.name
+    user_name = f.decrypt(current_user.name.encode('utf-8')).decode('utf-8') 
     user_id = current_user.id
     confidence = current_user.confidence
  
@@ -477,11 +549,9 @@ def user_signup():
 
         if request.form['email'] != '' or len(request.form['email'])!=0:
 
+ 
             name = request.form['name']
             email = request.form['email']
-
-            
-
 
             #Save thumbnail
             image = Image.open(photo_files_os[0])
@@ -497,6 +567,8 @@ def user_signup():
                 new_user_id = user.id
                 message = 'New user '+ request.form['name'] + ' has been updated'
             else:            
+                name = f.encrypt(name.encode())
+                email = f.encrypt(email.encode())
 
                 new_user = User(name=name, email=email, photo=thumb_filename)
                 db.session.add(new_user)
@@ -656,3 +728,23 @@ def send_email(user_id, exam_id):
     else:
         print("Email sent! Message ID:"),
         print(response['MessageId'])
+
+
+
+def encrypt_srt():
+    error=None
+    users = User.query.all()
+
+
+    for user in users:
+
+        name = user.name 
+        encrypted_name = f.encrypt(name.encode())
+
+        email = user.email
+        encrypted_email = f.encrypt(email.encode())
+
+        
+
+        print(user.name  + ' ', encrypted_name)
+        print(user.email + ' ', encrypted_email)

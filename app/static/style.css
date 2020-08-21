@@ -1476,6 +1476,13 @@ background-color: rgb(255, 255, 255);
 width:700px;
  
 }
+.table-wrapper-enrolment{
+    margin: 15px;
+    background-color: rgb(255, 255, 255);
+    width:100%;
+     
+    }
+
 
 .table-container {
     display: flex;
@@ -1684,6 +1691,13 @@ text-align: left;
  
     padding: 0 10px 0 10px;
     width: 150px;
+    text-align: left;
+}
+
+.tb-column-250{
+ 
+    padding: 0 10px 0 10px;
+    width: 250px;
     text-align: left;
 }
 

@@ -12,7 +12,7 @@
                     <div class="col-12">
                         <!-- Section Heading Area -->
                         <div class="section-heading text-center">
-                            <h2>FaceID Users</h2>
+                            <h2>List of enrolments for user ID: {{user_id}}</h2>
                             
                             <h3 id="message">
                             {% if message %}
@@ -42,57 +42,47 @@
                                       <p class="error"><strong>Error:</strong> {{ error }}</p>
                                     {% endif %}
 
-                                  
+                                    <div class="table-container">
+                                        <div class='table-wrapper-enrolment'>
+                                        
                                        
-
-
-                                        <div class='table-wrapper'>
-                                             
-                                             
-                                            {% for row in users|batch(5, '&nbsp;') %}
-                                             
-                                            <div class='tb-row'>
-     
-                                                {% for user in row %}
-                                                    {% if user != '&nbsp;' %}
-                                                    <div class='tb-column'>
-                                                            <div class='tb-line'>ID: {{ user.id }}</div>
-                                                            <div class='tb-image'><img width="100px" src="/static/photos/{{ user.photo }}"></div>
-                                                            <div class='tb-line'>{{ user.name }}</div>
-                                                            <div class='tb-line'>{{ user.email }}</div>
-                                                            <div class='tb-line'><a href="/admin/enrolment/user/{{ user.id }}">Enrolment</a></div>
-                                                        
-                                                    </div>
-                                                    {% endif %}
-                                                {% endfor %}
+                                        {% if not enrolment %}
+                                            <div class="special_description_content text-center">
+                                            <p><strong>No current enrolments</strong> </p>
                                             </div>
-    
-                                             
+                                        {% endif %}       
+                                     
+                                        {% for row in enrolment %}                                        
+                                        <div class='tb-row-25'>
                                             
-                                            {% endfor %}
-                                             
-                                          </div>
+                                            <div class='tb-column-title'> {{ row.Exams.title }}</div>
+                                            <div class='tb-column-250'> {{ row.Enrolment.date}}</div>
+                                            <div class='tb-column-150'><a href='/admin/delete/{{user_id}}/exam/{{row.Exams.id}}'> Delete enrolment</a> </div>
+                                            
+                                        </div>              
+                                        {% endfor %}
 
-       
+                                    </div> 
+                                </div> 
                                         
                                     
                             </div> 
                             
                             <div class="down-menu">
-                                <div class="app-download-btn wow fadeInUp button-200" data-wow-delay="0.2s">
+                                <!-- <div class="app-download-btn wow fadeInUp button-200" data-wow-delay="0.2s">
                                     
-                                    <a href="/admin/add/user/">
+                                    <a href="/admin/add/exam/">
                                         <i class="fa fa-sign-in-alt"></i>
-                                        <p class="mb-0">Add new user</p>
+                                        <p class="mb-0">Add new exam</p>
                                     </a>
-                                </div> 
+                                </div>  -->
 
 
                                 <div class="app-download-btn wow fadeInUp button-200" data-wow-delay="0.2s">
                                     
-                                    <a href="/admin/list/exams/">
+                                    <a href="/admin/list/users/">
                                         <i class="fa fa-sign-in-alt"></i>
-                                        <p class="mb-0">List all exams</p>
+                                        <p class="mb-0">List all users</p>
                                     </a>
                                 </div>  
                             </div>  
