@@ -25,7 +25,6 @@ ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
 f = Fernet(app.config['KEY'])
 
-
 def allowed_file(filename):
 	return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
@@ -44,60 +43,6 @@ def index():
     login_form = LoginForm()
    
     return render_template('index.html', title='Login', form=login_form, message="")
-
-
-@app.route('/login/', methods=['POST'])
-def user_login():
-    #login_form = LoginForm()
-
-    if request.method == 'POST':
-        
-
-        upload_folder = app.config.get('UPLOAD_FOLDER')
-        current_folder = os.getcwd()
-         
-        file = request.files['file']
-        image = Image.open(file)
-        image_path = upload_folder + str(uuid.uuid4()) + '.jpg'
-        image.save(image_path)
-
-        json_obj = execute_request(image_path)
-        flag = check_confidence(json_obj)
-
-
-        #flag = True  #for testing purposes
-
-        if flag:
-            user_id = json_obj['photos'][0]['tags'][0]['uids'][0]['prediction']
-            confidence = json_obj['photos'][0]['tags'][0]['uids'][0]['confidence']
-            
-
-            
- 
-            #Login manager
-            
-            user = User.query.filter_by(id=user_id).first()
- 
-            if user is None:
-                redirect = '{ "redirect": "/"}'
-                return redirect
-
-            user.authenticated = True
-            user.confidence = confidence
-            db.session.add(user)
-            db.session.commit()
-            login_user(user, remember=True)
-            redirect = '{ "redirect": "/user/"}'
-            return redirect
-
-            #return render_template('admin_panel.html', user=user_id, confidence=confidence)
-        else:
-            error = '{ "error": "Your photo was not recognized as user photo. Please, try again."}'
-            return error
-    return render_template('home_page.html', title='Login', form=login_form, message="")
-
-
-
 
 #Route for handling ADMIN pages ------------------------------------------------
 # Route for handling the login page logic
@@ -229,16 +174,17 @@ def add_user():
 @app.route('/admin/list/users/')
 def list_users():
     error=None
+
     users = User.query.all()
 
     # Decrypt names
     for user in users:
 
         username =  user.name
-        user.name  = f.decrypt(username.encode('utf-8')).decode('utf-8')
+        user.name  = f.decrypt(username).decode('utf-8')
 
         email = user.email
-        user.email = f.decrypt(email.encode('utf-8')).decode('utf-8')
+        user.email = f.decrypt(email).decode('utf-8')
 
  
 
@@ -363,6 +309,58 @@ def user_home():
     return render_template('./user/user_home.html', error=error, user_name = user_name, user_id=user_id, confidence=confidence, enrolment=enrolment, available_exams=available_exams, title=title)
 
  
+
+
+@app.route('/login/', methods=['POST'])
+def user_login():
+    #login_form = LoginForm()
+
+    if request.method == 'POST':
+        
+
+        upload_folder = app.config.get('UPLOAD_FOLDER')
+        current_folder = os.getcwd()
+         
+        file = request.files['file']
+        image = Image.open(file)
+        image_path = upload_folder + str(uuid.uuid4()) + '.jpg'
+        image.save(image_path)
+
+        json_obj = execute_request(image_path)
+        flag = check_confidence(json_obj)
+
+
+        #flag = True  #for testing purposes
+
+        if flag:
+            user_id = json_obj['photos'][0]['tags'][0]['uids'][0]['prediction']
+            confidence = json_obj['photos'][0]['tags'][0]['uids'][0]['confidence']
+            
+
+            
+ 
+            #Login manager
+            
+            user = User.query.filter_by(id=user_id).first()
+ 
+            if user is None:
+                redirect = '{ "redirect": "/"}'
+                return redirect
+
+            user.authenticated = True
+            user.confidence = confidence
+            db.session.add(user)
+            db.session.commit()
+            login_user(user, remember=True)
+            redirect = '{ "redirect": "/user/"}'
+            return redirect
+
+            #return render_template('admin_panel.html', user=user_id, confidence=confidence)
+        else:
+            error = '{ "error": "Your photo was not recognized as user photo. Please, try again."}'
+            return error
+    return render_template('home_page.html', title='Login', form=login_form, message="")
+
 
 @app.route('/user/<user_id>/enroll/<exam_id>', methods=['GET', 'POST'])
 @login_required
@@ -550,8 +548,8 @@ def user_signup():
         if request.form['email'] != '' or len(request.form['email'])!=0:
 
  
-            name = request.form['name']
-            email = request.form['email']
+            name = str(request.form['name'])
+            email = str(request.form['email'])
 
             #Save thumbnail
             image = Image.open(photo_files_os[0])
@@ -561,14 +559,28 @@ def user_signup():
             image.save(os.path.join(app.config['THUMB_FOLDER'], thumb_filename))
 
 
-            user = User.query.filter_by(email=email).first()
+
+
+            # = User.query.filter(User.email==email).first()
+            users = User.query.all()
+            user_match_id = None
+
+            for user in users:
+
+                user_email = f.decrypt(user.email).decode('utf-8')
+                if user_email == email:
+                    user_match_id = user.id
+                    break
+
             
-            if user:
-                new_user_id = user.id
-                message = 'New user '+ request.form['name'] + ' has been updated'
-            else:            
-                name = f.encrypt(name.encode())
-                email = f.encrypt(email.encode())
+            if user_match_id:
+                new_user_id = user_match_id
+                message = 'New user images for '+ name + ' ID: ' + str(user_match_id) + ' has been updated'
+ 
+            else:  
+
+                name = f.encrypt(name.encode('utf-8'))
+                email = f.encrypt(email.encode('utf-8'))          
 
                 new_user = User(name=name, email=email, photo=thumb_filename)
                 db.session.add(new_user)
@@ -583,7 +595,7 @@ def user_signup():
             for photo_file in photo_files_os:
                 response = execute_train(new_user_id, photo_file)
                 if 'error' in response:
-                    error = 'FaceID ' + response['error']
+                    error = 'FaceID ' + response['error'] + ' File: ' + filename
                     return render_template(template, error=error)
 
 
