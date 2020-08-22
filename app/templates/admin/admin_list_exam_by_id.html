@@ -52,12 +52,31 @@
                                             </div> 
                                         
                                             <div class='tb-row-exam-option'> 
-                                                <div class='tb-row-title'><div class='tb-line'>{{ question.option1 }}</div></div>
+                                                <div class='tb-row-title'><div class='tb-line'>&nbsp;&nbsp;&nbsp;{{ question.option1 }}</div></div>
                                             </div>
                                             <div class='tb-row-exam'> 
-                                                <div class='tb-row-title'><div class='tb-line'>{{ question.option2 }}</div></div>
+                                                <div class='tb-row-title'><div class='tb-line'>&nbsp;&nbsp;&nbsp;{{ question.option2 }}</div></div>
                                             </div>
                                              
+                                            {% if question.option3 %}
+                                            <div class='tb-row-exam-option'> 
+                                                <div class='tb-row-title'><div class='tb-line'>&nbsp;&nbsp;&nbsp;{{ question.option3 }}</div></div>
+                                            </div>
+                                            {% endif %}
+
+                                            {% if question.option4 %}
+                                            <div class='tb-row-exam-option'> 
+                                                <div class='tb-row-title'><div class='tb-line'>&nbsp;&nbsp;&nbsp;{{ question.option4 }}</div></div>
+                                            </div>
+                                            {% endif %}
+                                            
+
+                                            {% if question.option5 %}
+                                            <div class='tb-row-exam-option'> 
+                                                <div class='tb-row-title'><div class='tb-line'>&nbsp;&nbsp;&nbsp;{{ question.option5 }}</div></div>
+                                            </div>  
+                                            
+                                            {% endif %}
                                             {% endfor %}
                                              
                                           </div>

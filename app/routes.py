@@ -121,8 +121,12 @@ def add_user():
 
         
 
-        if request.form['name'] != '' or len(request.form['name'])!=0:
+        
+        if request.form['email'] != '' or len(request.form['email'])!=0:
 
+ 
+            name = str(request.form['name'])
+            email = str(request.form['email'])
 
             #Save thumbnail
             image = Image.open(photo_files_os[0])
@@ -131,26 +135,40 @@ def add_user():
             thumb_filename = str(uuid.uuid4()) + '.jpg'
             image.save(os.path.join(app.config['THUMB_FOLDER'], thumb_filename))
 
-            name = request.form['name']
-            name = f.encrypt(name.encode())
 
-            email = request.form['email']
-            email = f.encrypt(email.encode())
+
+
+            # = User.query.filter(User.email==email).first()
+            users = User.query.all()
+            user_match_id = None
+
+            for user in users:
+
+                user_email = f.decrypt(user.email).decode('utf-8')
+                if user_email == email:
+                    user_match_id = user.id
+                    break
 
             
+            if user_match_id:
+                new_user_id = user_match_id
+                message = 'New user images for '+ name + ' ID: ' + str(user_match_id) + ' has been updated'
+ 
+            else:  
 
-            new_user = User(name=name, email=email, photo=thumb_filename)
-            db.session.add(new_user)
-            db.session.commit()
-            message = 'New user '+ request.form['name'] + ' has been added'
-            #return redirect(url_for('/admin/list/users/',message=message))
+                name = f.encrypt(name.encode('utf-8'))
+                email = f.encrypt(email.encode('utf-8'))          
 
-            #add photo 
-            # for photo_file in photo_files_web:
-            #     new_photo = Photos(user_id = new_user.id, filename=photo_file)
-            #     db.session.add(new_photo)
-            #     db.session.commit()
+                new_user = User(name=name, email=email, photo=thumb_filename)
+                db.session.add(new_user)
+                db.session.commit()
+                new_user_id = new_user.id
+            
+                message = 'New user '+ request.form['name'] + ' has been added'
 
+ 
+            
+ 
             #Train faceID
             for photo_file in photo_files_os:
                 response = execute_train(new_user.id, photo_file)
@@ -164,8 +182,8 @@ def add_user():
                 if error is not None:
                     return render_template(template, error=error)
 
-            users = User.query.all()
-            return render_template('./admin/admin_list_users.html', users=users, message=message, error=error)
+             
+            return redirect('/admin/list/users/')
 
             #error = 'Invalid Credentials. Please try again.'
   
@@ -290,7 +308,7 @@ def user_home():
     if current_user.is_authenticated:
         pass
  
-    user_name = f.decrypt(current_user.name.encode('utf-8')).decode('utf-8') 
+    user_name = f.decrypt(current_user.name).decode('utf-8') 
     user_id = current_user.id
     confidence = current_user.confidence
  
@@ -688,7 +706,7 @@ def send_email(user_id, exam_id):
 
 
     # The subject line for the email.
-    SUBJECT = "New exam submission from " + user.name
+    SUBJECT = "New exam submission from " + f.decrypt(user.name).decode('utf-8')
 
     # The email body for recipients with non-HTML email clients.
     BODY_TEXT = ''
