@@ -25,6 +25,8 @@ class User(db.Model):
 
     exams = db.relationship('Enrolment', backref='user', lazy=True)
 
+    role = db.Column(db.String(5))
+
     
 
     def is_active(self):

@@ -46,36 +46,39 @@ def index():
 
 #Route for handling ADMIN pages ------------------------------------------------
 # Route for handling the login page logic
-@app.route('/admin_login/', methods=['GET', 'POST'])
+@app.route('/admin/login/', methods=['GET', 'POST'])
 def admin_login():
     error = None
     if request.method == 'POST':
         if request.form['username'] != 'admin' or request.form['password'] != 'admin':
             error = 'Invalid Credentials. Please try again.'
         else:
-            return redirect(url_for('/admin/home/'))
+            user = User.query.filter_by(id=3).one()
+            login_user(user, remember=True)
+            return redirect('/admin/')
     return render_template('./admin/admin_login.html', error=error)
-
-
-
-
 
 
 # Admin Routes-------------------------------
 @app.route('/admin/')
+@login_required
 def admin_home():
     error = None
+    if current_user.role != 'admin':
+        return redirect('/admin/login/')
 
     return render_template('./admin/admin_home.html', error=error)
 
 
 	
 @app.route('/admin/add/user/', methods=['GET', 'POST'])
+@login_required
 def add_user():
+    if current_user.role != 'admin':
+        return redirect('/admin/login/')
+
     error = None
     template = './admin/admin_add_user.html'
- 
-
     if request.method == 'POST':
 
         uploaded_files = request.files.getlist("file[]")
@@ -166,8 +169,7 @@ def add_user():
             
                 message = 'New user '+ request.form['name'] + ' has been added'
 
- 
-            
+         
  
             #Train faceID
             for photo_file in photo_files_os:
@@ -191,6 +193,10 @@ def add_user():
 
 @app.route('/admin/list/users/')
 def list_users():
+
+    if current_user.role != 'admin':
+        return redirect('/admin/login/')
+
     error=None
 
     users = User.query.all()
@@ -204,7 +210,6 @@ def list_users():
         email = user.email
         user.email = f.decrypt(email).decode('utf-8')
 
- 
 
     return render_template('./admin/admin_list_users.html', users=users, error=error)
 
@@ -213,29 +218,30 @@ def list_users():
 
 
 @app.route('/admin/enrolment/user/<user_id>')
-#@login_required
+@login_required
 def user_enrolment(user_id):
 
-  
+    if current_user.role != 'admin':
+        return redirect('/admin/login/')  
 
     title = 'User enrolment'
     error=None
  
-
     sq = db.session.query(Enrolment.exam_id).filter(Enrolment.user_id == user_id).subquery()
     available_exams =  db.session.query(Exams).filter(Exams.id.notin_(sq)).all()
 
     enrolment = db.session.query(Enrolment, Exams).outerjoin(Exams, Enrolment.exam_id == Exams.id).filter(Enrolment.user_id == user_id).order_by(Enrolment.date.desc()).all()
- 
- 
 
     return render_template('./admin/admin_user_enroll.html', error=error, user_id=user_id,  enrolment=enrolment, available_exams=available_exams, title=title)
 
 
 
-
 @app.route('/admin/delete/<user_id>/exam/<exam_id>')
+@login_required
 def delete_enrolment(user_id,exam_id):
+    if current_user.role != 'admin':
+        return redirect('/admin/login/')
+    
     error=None
 
     try:
@@ -265,20 +271,24 @@ def delete_enrolment(user_id,exam_id):
     db.session.commit()
 
  
-    
-
     return render_template('./admin/admin_home.html', error=error)
 
 
 @app.route('/admin/list/exams/')
+@login_required
 def list_exams():
+    if current_user.role != 'admin':
+        return redirect('/admin/login/')
     error=None
     exams = Exams.query.all()
 
     return render_template('./admin/admin_list_exams.html', exams=exams, error=error)
 
 @app.route('/admin/list/exam/<exam_id>')
+@login_required
 def get_exam(exam_id):
+    if current_user.role != 'admin':
+        return redirect('/admin/login/')
     error=None
     exam = Exams.query.filter_by(id=exam_id).first()
     questions = Question.query.filter_by(exam_id=exam_id).order_by(Question.id).all()
@@ -286,23 +296,23 @@ def get_exam(exam_id):
     return render_template('./admin/admin_list_exam_by_id.html', exam=exam, questions=questions, error=error)
 
 
-@app.route('/admin/key')
-def get_key():
-    error='Key written to /cr/dbencr.key'
+# @app.route('/admin/key')
+# def get_key():
+#     error='Key written to /cr/dbencr.key'
 
  
-    # key = Fernet.generate_key()
-    # with open("./cr/dbencr.key", "wb") as key_file:
-    #     key_file.write(key)
+#     # key = Fernet.generate_key()
+#     # with open("./cr/dbencr.key", "wb") as key_file:
+#     #     key_file.write(key)
  
-    return render_template('./admin/admin_home.html', error=error)
+#     return render_template('./admin/admin_home.html', error=error)
 
 # End Admin Routes-------------------------------
 
 
 #User routes---------------------------
 @app.route('/user/')
-#@login_required
+@login_required
 def user_home():
 
     if current_user.is_authenticated:
