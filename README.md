@@ -1,6 +1,6 @@
 # The exam portal with Face ID authentication method
          
-FaceID application is Exam portal that provides intuitive and secure authentication enabled by camera to accurately map the geometry of user face.
+FaceID application Exam portal that provides intuitive and secure authentication enabled by camera to accurately map the geometry of user's face.
 
 ## Features
     • FaceID user authorizaton 
