@@ -21,9 +21,16 @@ Download the project dependencies from project root with:
 ``` 
 pip3 install -r requirements.txt
 ``` 
+
 To run FaceID application locally:
+
+Add FLASK_APP environment variable
 ``` 
-python3 main.py
+FLASK_APP=main.py
+``` 
+And run the application
+``` 
+flask run
 ``` 
 
 FaceID application is running at: http://localhost:5000/ in your browser
