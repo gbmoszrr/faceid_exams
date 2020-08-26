@@ -7,8 +7,8 @@ from wtforms import StringField
 from app.api_logic import execute_request, execute_train, rebuild_album, check_confidence
 import json
 from cryptography.fernet import Fernet
-
-from PIL import Image
+import time
+from PIL import Image, ImageDraw
  
 from app.models import db, User, Exams, Enrolment, Question, Photos, Answers
  
@@ -321,6 +321,7 @@ def user_home():
     user_name = f.decrypt(current_user.name).decode('utf-8') 
     user_id = current_user.id
     confidence = current_user.confidence
+    timing = current_user.timing
  
 
     title = 'Homepage'
@@ -334,7 +335,7 @@ def user_home():
  
  
 
-    return render_template('./user/user_home.html', error=error, user_name = user_name, user_id=user_id, confidence=confidence, enrolment=enrolment, available_exams=available_exams, title=title)
+    return render_template('./user/user_home.html', error=error, user_name = user_name, user_id=user_id, confidence=confidence, timing =timing, enrolment=enrolment, available_exams=available_exams, title=title)
 
  
 
@@ -354,9 +355,25 @@ def user_login():
         image_path = upload_folder + str(uuid.uuid4()) + '.jpg'
         image.save(image_path)
 
+        # Record recognition time
+        start = time.time()
+
         json_obj = execute_request(image_path)
+        end = time.time()
+
         flag = check_confidence(json_obj)
 
+        # Draw bounding box and save image
+        x_center = json_obj['photos'][0]['tags'][0]['center']['x']
+        y_center = json_obj['photos'][0]['tags'][0]['center']['y']
+        w = json_obj['photos'][0]['tags'][0]['width']
+        h = json_obj['photos'][0]['tags'][0]['height']
+        shape = [ (x_center - int(w/2), y_center - int(h/2)), (w + int(w/2), h + int(w/2))]
+        draw = ImageDraw.Draw(image) 
+        draw.rectangle(shape, fill = None, outline ="red") 
+
+
+        image.save(image_path)
 
         #flag = True  #for testing purposes
 
@@ -377,6 +394,8 @@ def user_login():
 
             user.authenticated = True
             user.confidence = confidence
+            timing = '{:.4f}'.format(end - start)
+            user.timing = timing
             db.session.add(user)
             db.session.commit()
             login_user(user, remember=True)
