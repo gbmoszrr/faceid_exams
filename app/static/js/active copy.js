@@ -90,7 +90,14 @@
         });
     }
 
- 
+    // :: 5.0 CounterUp Active Code
+    if ($.fn.counterUp) {
+        $('.counter').counterUp({
+            delay: 10,
+            time: 2000
+        });
+    }
+
     // :: 6.0 onePageNav Active Code
     if ($.fn.onePageNav) {
         $('#nav').onePageNav({
@@ -100,7 +107,17 @@
         });
     }
 
- 
+    // :: 7.0 Magnific-popup Video Active Code
+    if ($.fn.magnificPopup) {
+        $('.video_btn').magnificPopup({
+            disableOn: 0,
+            type: 'iframe',
+            mainClass: 'mfp-fade',
+            removalDelay: 160,
+            preloader: true,
+            fixedContentPos: false
+        });
+    }
 
     $('a[href="#"]').click(function ($) {
         $.preventDefault()
@@ -121,6 +138,11 @@
         }
     });
 
- 
+    // :: 9.0 Preloader Active code
+    $window.on('load', function () {
+        $('#preloader').fadeOut('slow', function () {
+            $(this).remove();
+        });
+    });
 
 })(jQuery);

@@ -272,7 +272,7 @@ p {
     vertical-align: middle;
 }
 
-#preloader {
+#preloader4 {
     overflow: hidden;
     background-color: #fff;
     height: 100%;
@@ -1367,6 +1367,12 @@ p {
     height: 360px;
 }
 
+#my_camera_exam{
+    background-image: url("img/bg-img/special.png");
+    width: 240px;
+    height: 360px;
+}
+
 #results{
     background-image: url("img/bg-img/special.png");
     width: 480px;
@@ -1497,7 +1503,7 @@ display: flex;
 flex-direction: row;
 flex-wrap: wrap;
 width: 100%;
-height:220px;
+height:260px;
 }
 
 .tb-row-exams{
@@ -1709,3 +1715,34 @@ text-align: left;
     font-size: 14px;
     padding: 0 0 10px 5px;
 }
+
+.stickycam {
+    position: -webkit-sticky;
+    position: sticky;
+    bottom: 0;
+    z-index: 2147483647;
+    width: 241px;
+    padding: 15px;
+    font-size: 20px;
+ 
+  }
+
+#statusmessage{
+    color:  rgb(7, 175, 1);
+    font-size: 12px;
+}
+.wronguser{
+    border: 3px solid;
+    border-color: rgb(248, 2, 15);
+    width: 247px;
+    height: 187px;
+}
+
+
+.gooduser{
+    border: 3px solid;
+    border-color: aquamarine;
+    width: 247px;
+    height: 187px;
+}
+

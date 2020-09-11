@@ -26,8 +26,10 @@ class User(db.Model):
     exams = db.relationship('Enrolment', backref='user', lazy=True)
 
     role = db.Column(db.String(5))
-    timing = db.Column(db.String(6), default=False)
-
+    timing = db.Column(db.String(6), default=0)
+    faceid = db.Column(db.String(80))
+    deleted = db.Column(db.Boolean, default=False)
+    errors = db.Column(db.Integer, default=0)
     
 
     def is_active(self):

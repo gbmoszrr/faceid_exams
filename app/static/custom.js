@@ -8,6 +8,16 @@ function ShowCam() {
     Webcam.attach('#my_camera');
 }
 
+function ShowCamExam() {
+    Webcam.set({
+        width: 241,
+        height: 181,
+        image_format: 'jpeg',
+        jpeg_quality: 90
+    });
+    Webcam.attach('#my_camera');
+}
+
 // fetch the login_form.html template and embed it into content div
 function loadForm() {
     var xhr= new XMLHttpRequest();

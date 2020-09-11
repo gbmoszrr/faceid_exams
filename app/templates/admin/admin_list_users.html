@@ -56,19 +56,21 @@
                                                 {% for user in row %}
                                                     {% if user != '&nbsp;' %}
                                                     <div class='tb-column'>
+                                                            
                                                             <div class='tb-line'>ID: {{ user.id }}</div>
                                                             <div class='tb-image'><img width="100px" src="/static/photos/{{ user.photo }}"></div>
                                                             <div class='tb-line'>{{ user.name }}</div>
                                                             <div class='tb-line'>{{ user.email }}</div>
                                                             <div class='tb-line'><a href="/admin/enrolment/user/{{ user.id }}">Enrolment</a></div>
-                                                        
+                                                            
+                                                            <div class='tb-line'><a href="/admin/delete/user/{{ user.id }}">Delete User</a></div>
+                                                             
+                                                            
                                                     </div>
                                                     {% endif %}
                                                 {% endfor %}
-                                            </div>
-    
-                                             
-                                            
+                                            </div>                                
+                            
                                             {% endfor %}
                                              
                                           </div>

@@ -7,8 +7,8 @@ def execute_request(image_path):
     --header 'content-type: multipart/form-data' 
     --header 'x-rapidapi-host: lambda-face-recognition.p.rapidapi.com' 
     --header 'x-rapidapi-key: 00882e5b93msh86028921959febdp1b1876jsn5805e7355b02' 
-    --form albumkey=3310cdaa4c5906dcac7f8c62482d4302279e738a2efb610ce82b7ec29495233d
-    --form album=USERS1 --form files=@''' + image_path
+    --form albumkey=8f0bb8682fb1290431fdf127d60549920be1a3843f20388b0c895d344bda0e91
+    --form album=USERS3 --form files=@''' + image_path
 
     args = shlex.split(bashCommand)
     process = subprocess.Popen(args, stdout=subprocess.PIPE)
@@ -43,8 +43,8 @@ def execute_train(user_id, image_path):
     --header 'x-rapidapi-host: lambda-face-recognition.p.rapidapi.com' 
     --header 'x-rapidapi-key: 00882e5b93msh86028921959febdp1b1876jsn5805e7355b02'
     --form entryid=''' + str(user_id) + '''
-    --form albumkey=3310cdaa4c5906dcac7f8c62482d4302279e738a2efb610ce82b7ec29495233d
-    --form album=USERS1 --form files=@'''  + image_path
+    --form albumkey=8f0bb8682fb1290431fdf127d60549920be1a3843f20388b0c895d344bda0e91
+    --form album=USERS3 --form files=@'''  + image_path
 
  
     args = shlex.split(bashCommand)
@@ -65,8 +65,8 @@ def rebuild_album():
     --header 'content-type: multipart/form-data' 
     --header 'x-rapidapi-host: lambda-face-recognition.p.rapidapi.com' 
     --header 'x-rapidapi-key: 00882e5b93msh86028921959febdp1b1876jsn5805e7355b02'
-    --form albumkey=3310cdaa4c5906dcac7f8c62482d4302279e738a2efb610ce82b7ec29495233d
-    --form album=USERS1'''
+    --form albumkey=8f0bb8682fb1290431fdf127d60549920be1a3843f20388b0c895d344bda0e91
+    --form album=USERS3'''
  
     args = shlex.split(bashCommand)
     process = subprocess.Popen(args, stdout=subprocess.PIPE)

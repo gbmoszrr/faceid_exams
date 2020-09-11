@@ -5,3 +5,6 @@ class Config(object):
     THUMB_FOLDER = './app/static/photos/'
     SQLALCHEMY_DATABASE_URI = 'sqlite:///../db/exams.db'
     KEY = open('./cr/dbencr.key', 'rb').read()
+
+
+

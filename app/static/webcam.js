@@ -54,7 +54,7 @@ var Webcam = {
 		enable_flash: true,    // enable flash fallback,
 		force_flash: false,    // force flash mode,
 		flip_horiz: false,     // flip image horiz (mirror mode)
-		fps: 30,               // camera frames per second
+		fps: 15,               // camera frames per second
 		upload_name: 'webcam', // name of file in upload post data
 		constraints: null,     // custom user media constraints,
 		swfURL: '',            // URI to webcam.swf movie (defaults to the js location)

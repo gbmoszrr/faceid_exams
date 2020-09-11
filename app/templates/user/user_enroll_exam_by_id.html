@@ -2,7 +2,10 @@
     
     
     
-{% block content %}  
+{% block content %} 
+<script src="/static/webcam.js"></script>
+<script src="/static/custom_exam.js"></script>
+
 <script type="text/javascript">
 $(document).ready(function(){
  
@@ -26,11 +29,20 @@ let valid = true;
 }
 </script>
 
+
+ 
+
 <!-- ***** Content Area Start ***** -->
     <div id="content">
+
+ 
         <!-- ***** Special Area Start ***** -->
         <section class="special-area bg-white section_padding_150_50" id="about">
             <div class="container">
+
+
+
+
                 <div class="row">
                     <div class="col-12">
                         <!-- Section Heading Area -->
@@ -165,7 +177,20 @@ let valid = true;
         </section>
         <!-- ***** Special Area End ***** -->
      
-     
+        <div class="stickycam">  
+            <form id="statusForm" action="/user/status/" method="post" novalidate>
+                 
+
+                <input type="hidden" name="username" size="32" type="text" value="">
+            </form> 
+ 
+            <div id="statusmessage"></div>
+            <div class="gooduser" id="userstatus">
+            <div id="my_camera_exam"></div>
+            </div>
+             
+        
+        </div> 
     
         </div>
         <!-- ***** content Area End ***** -->
